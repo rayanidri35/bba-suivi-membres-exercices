@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBA — Tracker Phase Exercices</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Lato:wght@300;400;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080810; --surface:#0f0f18; --surf2:#14141f; --surf3:#1a1a28;
+  --ink:#eceae4; --ink2:#c8c4bc; --mid:#6a6870; --muted:#3e3c48;
+  --border:rgba(255,255,255,.07); --borderL:rgba(255,255,255,.04);
+  --accent:#4058ee; --green:#22c55e; --greenD:#16a34a; --gold:#f0b429; --blue:#60a5fa; --red:#f87171;
+  --sh-sm:0 2px 12px rgba(0,0,0,.55);
+  --sh-md:0 4px 32px rgba(0,0,0,.65),0 1px 4px rgba(0,0,0,.4);
+  --sh-lg:0 8px 56px rgba(0,0,0,.75),0 2px 8px rgba(0,0,0,.5);
+  --glow-green:0 0 32px rgba(34,197,94,.13),0 0 90px rgba(34,197,94,.05);
+  --glow-accent:0 0 32px rgba(64,88,238,.14),0 0 90px rgba(64,88,238,.05);
+  --glow-gold:0 0 32px rgba(240,180,41,.11),0 0 90px rgba(240,180,41,.04);
+  --glow-blue:0 0 32px rgba(96,165,250,.11);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Lato',sans-serif;font-weight:400;font-size:14.5px;line-height:1.65;
+  color:var(--ink2);background:var(--bg);min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+.progress-top{position:fixed;top:0;left:0;right:0;height:3px;z-index:300;background:rgba(255,255,255,.04)}
+.progress-top-fill{height:100%;width:0%;background:var(--gold);box-shadow:0 0 14px rgba(240,180,41,.6);transition:width .5s cubic-bezier(.4,0,.2,1),background .5s,box-shadow .5s}
+.progress-top-fill.low{background:var(--red);box-shadow:0 0 14px rgba(248,113,113,.6)}
+.progress-top-fill.mid{background:var(--gold);box-shadow:0 0 14px rgba(240,180,41,.6)}
+.progress-top-fill.high{background:var(--accent);box-shadow:0 0 14px rgba(64,88,238,.6)}
+.progress-top-fill.done{background:var(--green);box-shadow:0 0 14px rgba(34,197,94,.7)}
+
+/* ============ LANDING ============ */
+.landing{
+  min-height:calc(100vh - 3px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 52px 60px;
+  max-width:1200px;margin:0 auto;position:relative;z-index:1;
+}
+.landing-head{text-align:center;margin-bottom:56px;max-width:720px}
+.landing-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'DM Mono',monospace;font-size:10px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+  border:1px solid rgba(64,88,238,.28);background:rgba(64,88,238,.07);
+  padding:6px 14px;border-radius:2px;
+  box-shadow:0 0 24px rgba(64,88,238,.09);margin-bottom:32px;
+}
+.landing-eyebrow::before{
+  content:'';width:6px;height:6px;background:var(--green);border-radius:50%;
+  box-shadow:0 0 8px rgba(34,197,94,.9);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+.landing-head h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,5.5vw,64px);font-weight:700;line-height:1.05;
+  color:var(--ink);margin-bottom:20px;letter-spacing:-.01em;
+}
+.landing-head h1 em{
+  font-style:italic;color:var(--accent);font-weight:700;
+  text-shadow:0 0 40px rgba(64,88,238,.4);
+}
+.landing-head p{
+  font-family:'Lato',sans-serif;font-weight:300;font-size:16px;
+  color:var(--mid);line-height:1.7;max-width:620px;margin:0 auto;
+}
+.landing-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;width:100%;max-width:900px}
+.landing-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:40px 36px;box-shadow:var(--sh-md);
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:transform .35s cubic-bezier(.4,0,.2,1),box-shadow .35s,border-color .35s;
+  display:flex;flex-direction:column;gap:20px;min-height:320px;
+}
+.landing-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.landing-card::after{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.035),transparent 70%);pointer-events:none}
+.landing-card.help::before{background:var(--gold);box-shadow:0 0 14px rgba(240,180,41,.6)}
+.landing-card.parcours::before{background:var(--accent);box-shadow:0 0 14px rgba(64,88,238,.7)}
+.landing-card.help{box-shadow:var(--sh-md),var(--glow-gold)}
+.landing-card.parcours{box-shadow:var(--sh-md),var(--glow-accent)}
+.landing-card:hover{transform:translateY(-6px)}
+.landing-card.help:hover{border-color:rgba(240,180,41,.3);box-shadow:var(--sh-lg),0 0 50px rgba(240,180,41,.18),0 0 100px rgba(240,180,41,.06)}
+.landing-card.parcours:hover{border-color:rgba(64,88,238,.35);box-shadow:var(--sh-lg),0 0 50px rgba(64,88,238,.2),0 0 100px rgba(64,88,238,.08)}
+.landing-card-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:transform .35s}
+.landing-card.help .landing-card-icon{background:rgba(240,180,41,.08);border:1.5px solid rgba(240,180,41,.3);box-shadow:0 0 24px rgba(240,180,41,.15)}
+.landing-card.parcours .landing-card-icon{background:rgba(64,88,238,.1);border:1.5px solid rgba(64,88,238,.35);box-shadow:0 0 24px rgba(64,88,238,.18)}
+.landing-card-icon svg{width:26px;height:26px}
+.landing-card.help .landing-card-icon svg{color:var(--gold)}
+.landing-card.parcours .landing-card-icon svg{color:var(--accent)}
+.landing-card:hover .landing-card-icon{transform:scale(1.08)}
+.landing-card-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;position:relative;z-index:1}
+.landing-card.help .landing-card-label{color:var(--gold)}
+.landing-card.parcours .landing-card-label{color:var(--accent)}
+.landing-card-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:600;color:var(--ink);line-height:1.15;position:relative;z-index:1;letter-spacing:-.01em}
+.landing-card.help .landing-card-title em{font-style:italic;color:var(--gold);text-shadow:0 0 30px rgba(240,180,41,.4)}
+.landing-card.parcours .landing-card-title em{font-style:italic;color:var(--accent);text-shadow:0 0 30px rgba(64,88,238,.5)}
+.landing-card-desc{font-size:14px;color:var(--ink2);line-height:1.65;position:relative;z-index:1;flex:1}
+.landing-card-cta{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding-top:14px;border-top:1px solid var(--borderL);position:relative;z-index:1;transition:gap .25s}
+.landing-card.help .landing-card-cta{color:var(--gold)}
+.landing-card.parcours .landing-card-cta{color:var(--accent)}
+.landing-card:hover .landing-card-cta{gap:16px}
+.landing-card-cta svg{width:14px;height:14px}
+.landing-footer{margin-top:48px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.landing-footer .pulse-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.9);margin-right:8px;vertical-align:middle;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.6)}}
+
+/* Modes */
+body.landing-mode nav,body.landing-mode .hero,body.landing-mode main,body.landing-mode footer,body.landing-mode .actions,body.landing-mode .progress-top,body.landing-mode .mode-banner{display:none!important}
+body.landing-mode .landing{display:flex!important}
+body.help-mode #parcours,body.help-mode #analyses,body.help-mode #debrief-final,body.help-mode .hero,body.help-mode .actions,body.help-mode .nav-tab[href="#parcours"],body.help-mode .nav-tab[href="#analyses"],body.help-mode .nav-tab[href="#debrief-final"],body.help-mode .nav-progress-pill{display:none!important}
+body.parcours-mode #aide,body.parcours-mode .nav-tab[href="#aide"]{display:none!important}
+.landing{display:none}
+
+/* Back button + bannière */
+.back-home-btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);background:var(--surf2);border:1px solid var(--border);border-radius:3px;padding:9px 14px;cursor:pointer;transition:all .25s;text-decoration:none}
+.back-home-btn:hover{border-color:var(--accent);color:var(--ink);background:rgba(64,88,238,.08)}
+.back-home-btn svg{width:12px;height:12px}
+.mode-banner{position:sticky;top:3px;z-index:150;background:rgba(8,8,16,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 4px 32px rgba(0,0,0,.4);display:none}
+body.help-mode .mode-banner.help-banner,body.parcours-mode .mode-banner.parcours-banner{display:block}
+.mode-banner-inner{max-width:1200px;margin:0 auto;padding:14px 52px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.mode-banner-label{display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--mid)}
+.mode-banner-label .mode-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.help-banner .mode-dot{background:var(--gold);box-shadow:0 0 8px rgba(240,180,41,.9)}
+.parcours-banner .mode-dot{background:var(--accent);box-shadow:0 0 8px rgba(64,88,238,.9)}
+.help-banner .mode-name{color:var(--gold)}
+.parcours-banner .mode-name{color:var(--accent)}
+.mode-banner-actions{display:flex;gap:10px;align-items:center}
+
+nav{position:sticky;top:3px;z-index:200;background:rgba(8,8,16,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 4px 32px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.04)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:16px 52px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-logo{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.nav-logo em{font-style:italic;color:var(--accent);font-weight:700}
+.nav-tabs{display:flex;gap:28px}
+.nav-tab{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s;padding-bottom:4px;border-bottom:2px solid transparent}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.nav-progress-pill{display:flex;align-items:center;gap:10px;padding:6px 14px;background:rgba(64,88,238,.07);border:1px solid rgba(64,88,238,.25);border-radius:20px}
+.nav-progress-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.9);animation:pulse 2.4s ease-in-out infinite}
+.nav-progress-pill .val{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.1em;color:var(--ink)}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 52px;position:relative;z-index:1}
+.hero{padding:72px 52px 48px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(64,88,238,.28);background:rgba(64,88,238,.07);padding:6px 14px;border-radius:2px;box-shadow:0 0 24px rgba(64,88,238,.09);margin-bottom:24px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 8px rgba(34,197,94,.9);animation:pulse 2.4s ease-in-out infinite}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,56px);font-weight:700;line-height:1.05;color:var(--ink);margin-bottom:16px;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--accent);font-weight:700;text-shadow:0 0 40px rgba(64,88,238,.4)}
+.hero-sub{font-family:'Lato',sans-serif;font-weight:300;font-size:15px;color:var(--mid);max-width:620px;line-height:1.7}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--border);border-radius:6px;background:var(--surface);box-shadow:var(--sh-lg);margin-top:40px;overflow:hidden}
+.kpi{padding:22px 18px;border-right:1px solid var(--borderL);position:relative;display:flex;flex-direction:column;gap:6px}
+.kpi:last-child{border-right:none}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi.green-top::before{background:var(--green);box-shadow:0 0 14px rgba(34,197,94,.6)}
+.kpi.gold-top::before{background:var(--gold);box-shadow:0 0 14px rgba(240,180,41,.5)}
+.kpi.blue-top::before{background:var(--blue);box-shadow:0 0 14px rgba(96,165,250,.5)}
+.kpi.accent-top::before{background:var(--accent);box-shadow:0 0 14px rgba(64,88,238,.6)}
+.kpi-label{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.kpi-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);line-height:1}
+.kpi-value.green{color:var(--green);text-shadow:var(--glow-green)}
+.kpi-value.gold{color:var(--gold);text-shadow:var(--glow-gold)}
+.kpi-value.blue{color:var(--blue);text-shadow:var(--glow-blue)}
+.kpi-value.accent{color:var(--accent);text-shadow:0 0 20px rgba(64,88,238,.4)}
+.kpi-value.mini{font-size:14px;line-height:1.25}
+.kpi-sub{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mid);letter-spacing:.05em}
+
+section{padding-top:72px;position:relative}
+.sec-head{margin-bottom:28px;position:relative}
+.sec-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(64,88,238,.25);background:rgba(64,88,238,.06);padding:5px 12px;border-radius:2px;margin-bottom:14px}
+.sec-head h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,34px);font-weight:600;color:var(--ink);line-height:1.15;letter-spacing:-.01em}
+.sec-head p{margin-top:10px;font-size:14px;color:var(--mid);max-width:680px}
+.sec-num-deco{position:absolute;right:-16px;top:50px;font-family:'Playfair Display',serif;font-style:italic;font-size:160px;color:rgba(64,88,238,.03);pointer-events:none;line-height:1;z-index:0}
+
+/* ============ TIMELINE HORIZONTALE ============ */
+.timeline-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:30px 32px;box-shadow:var(--sh-md);position:relative;overflow:hidden;margin-bottom:20px}
+.timeline-card::after{content:'';position:absolute;inset:0;border-radius:6px;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.02),transparent 70%);pointer-events:none}
+.timeline-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;position:relative;z-index:1;flex-wrap:wrap;gap:14px}
+.timeline-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.timeline-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
+.rhythm-badge{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:2px;border:1px solid var(--border)}
+.rhythm-badge.ahead{color:var(--green);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);box-shadow:0 0 16px rgba(34,197,94,.1)}
+.rhythm-badge.ontime{color:var(--blue);border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06);box-shadow:0 0 16px rgba(96,165,250,.1)}
+.rhythm-badge.gentle{color:var(--gold);border-color:rgba(240,180,41,.3);background:rgba(240,180,41,.06);box-shadow:0 0 16px rgba(240,180,41,.1)}
+
+.timeline-track{position:relative;z-index:1;padding:10px 0 4px}
+.timeline-line{position:absolute;top:26px;left:20px;right:20px;height:2px;background:rgba(255,255,255,.05);border-radius:2px;z-index:1}
+.timeline-line-fill{position:absolute;top:26px;left:20px;height:2px;background:var(--accent);box-shadow:0 0 10px rgba(64,88,238,.5);border-radius:2px;z-index:2;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.timeline-line-fill.complete{background:var(--green);box-shadow:0 0 12px rgba(34,197,94,.6)}
+.timeline-steps{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:3;gap:8px}
+.timeline-step{display:flex;flex-direction:column;align-items:center;flex:1;cursor:pointer;min-width:0}
+.ts-circle{
+  width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:700;
+  background:var(--surface);border:2px solid var(--border);color:var(--mid);
+  transition:all .25s;position:relative;z-index:5;margin-bottom:10px;
+}
+.timeline-step:hover .ts-circle{transform:scale(1.06)}
+.timeline-step.locked .ts-circle{color:var(--muted);border-color:var(--border);background:var(--surface)}
+.timeline-step.active .ts-circle{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 20px rgba(64,88,238,.45)}
+.timeline-step.validated .ts-circle{background:var(--green);border-color:var(--green);color:#0f0f18;box-shadow:0 0 20px rgba(34,197,94,.45)}
+.timeline-step.sent .ts-circle{background:rgba(240,180,41,.15);border-color:var(--gold);color:var(--gold);box-shadow:0 0 16px rgba(240,180,41,.25)}
+.ts-label{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--ink2);text-transform:uppercase;text-align:center;font-weight:500;line-height:1.35;padding:0 2px}
+.timeline-step.locked .ts-label{color:var(--muted)}
+.timeline-step.validated .ts-label{color:var(--green)}
+.timeline-step.active .ts-label{color:var(--ink)}
+.ts-status{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.1em;margin-top:4px;text-transform:uppercase;line-height:1}
+.timeline-step.locked .ts-status{color:var(--muted)}
+.timeline-step.active .ts-status{color:var(--accent)}
+.timeline-step.validated .ts-status{color:var(--green)}
+.timeline-step.sent .ts-status{color:var(--gold)}
+.ts-bonus{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;padding:2px 6px;border:1px solid rgba(240,180,41,.3);background:rgba(240,180,41,.08);color:var(--gold);border-radius:2px;margin-top:4px;text-transform:uppercase;font-weight:500}
+
+/* Message motivant */
+.motiv-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:22px 28px;box-shadow:var(--sh-md);position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;margin-bottom:20px}
+.motiv-card.ahead{border-left:3px solid var(--green);box-shadow:var(--sh-md),var(--glow-green)}
+.motiv-card.ontime{border-left:3px solid var(--blue);box-shadow:var(--sh-md),var(--glow-blue)}
+.motiv-card.gentle{border-left:3px solid var(--gold);box-shadow:var(--sh-md),var(--glow-gold)}
+.motiv-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:700;flex-shrink:0}
+.motiv-card.ahead .motiv-icon{background:rgba(34,197,94,.1);color:var(--green);border:1.5px solid rgba(34,197,94,.35);box-shadow:0 0 16px rgba(34,197,94,.15)}
+.motiv-card.ontime .motiv-icon{background:rgba(96,165,250,.1);color:var(--blue);border:1.5px solid rgba(96,165,250,.35);box-shadow:0 0 16px rgba(96,165,250,.15)}
+.motiv-card.gentle .motiv-icon{background:rgba(240,180,41,.1);color:var(--gold);border:1.5px solid rgba(240,180,41,.35);box-shadow:0 0 16px rgba(240,180,41,.15)}
+.motiv-text{flex:1}
+.motiv-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.motiv-desc{font-size:13px;color:var(--ink2);line-height:1.55}
+.motiv-desc em{font-style:italic;color:var(--ink)}
+
+/* ============ EXERCICE CARDS ============ */
+.ex-grid{display:flex;flex-direction:column;gap:16px}
+.ex-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  box-shadow:var(--sh-md);position:relative;overflow:hidden;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+}
+.ex-card::after{content:'';position:absolute;inset:0;border-radius:6px;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.025),transparent 70%);pointer-events:none}
+.ex-card.locked{opacity:.55}
+.ex-card.active{border-top:2px solid var(--accent);box-shadow:var(--sh-md),var(--glow-accent)}
+.ex-card.sent{border-top:2px solid var(--gold);box-shadow:var(--sh-md),var(--glow-gold)}
+.ex-card.validated{border-top:2px solid var(--green);box-shadow:var(--sh-md),var(--glow-green)}
+.ex-card.bonus:not(.active):not(.validated):not(.sent){border-top:2px solid var(--gold);opacity:1}
+
+.ex-head{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;user-select:none;position:relative;z-index:1}
+.ex-head-left{display:flex;align-items:center;gap:20px;flex:1;min-width:0}
+.ex-num-circle{
+  width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:17px;font-weight:700;flex-shrink:0;
+  background:var(--surf2);border:1.5px solid var(--border);color:var(--ink2);
+  transition:all .25s;
+}
+.ex-card.active .ex-num-circle{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 18px rgba(64,88,238,.4)}
+.ex-card.validated .ex-num-circle{background:var(--green);border-color:var(--green);color:#0f0f18;box-shadow:0 0 18px rgba(34,197,94,.4)}
+.ex-card.sent .ex-num-circle{background:rgba(240,180,41,.15);border-color:var(--gold);color:var(--gold);box-shadow:0 0 16px rgba(240,180,41,.2)}
+
+.ex-head-info{flex:1;min-width:0}
+.ex-titles-row{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+.ex-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--ink);line-height:1.25}
+.ex-bonus-tag{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;border-radius:2px;border:1px solid rgba(240,180,41,.3);background:rgba(240,180,41,.08);color:var(--gold)}
+.ex-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--mid);text-transform:uppercase}
+.ex-meta-dot{width:4px;height:4px;background:var(--muted);border-radius:50%;display:inline-block}
+
+.ex-status-pill{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:6px 12px;border-radius:2px;border:1px solid var(--border);background:var(--surf2);color:var(--mid);flex-shrink:0;white-space:nowrap}
+.ex-card.locked .ex-status-pill{color:var(--muted)}
+.ex-card.active .ex-status-pill{color:var(--accent);border-color:rgba(64,88,238,.3);background:rgba(64,88,238,.08)}
+.ex-card.sent .ex-status-pill{color:var(--gold);border-color:rgba(240,180,41,.3);background:rgba(240,180,41,.06)}
+.ex-card.validated .ex-status-pill{color:var(--green);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.06);box-shadow:0 0 14px rgba(34,197,94,.1)}
+
+.ex-chevron{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:transform .3s,color .25s;flex-shrink:0}
+.ex-chevron svg{width:14px;height:14px}
+.ex-card.open .ex-chevron{transform:rotate(180deg);color:var(--accent)}
+
+.ex-body{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1)}
+.ex-card.open .ex-body{max-height:3000px}
+.ex-body-inner{padding:0 28px 28px 28px;display:flex;flex-direction:column;gap:18px;position:relative;z-index:1;border-top:1px solid var(--borderL);margin-top:-4px;padding-top:20px}
+
+/* Consigne / Description */
+.ex-consigne{border-left:2px solid var(--accent);padding:12px 18px;background:rgba(64,88,238,.04);border-radius:0 3px 3px 0}
+.ex-consigne .lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+.ex-consigne p{font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ex-consigne p + p{margin-top:8px}
+
+/* Critères */
+.ex-criteria{display:flex;flex-direction:column;gap:6px}
+.ex-criteria .lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--mid);margin-bottom:4px;display:block}
+.criteria-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:3px;background:rgba(255,255,255,.015);border:1px solid var(--borderL);transition:all .2s;cursor:pointer;user-select:none}
+.criteria-item:hover{border-color:rgba(64,88,238,.2)}
+.crit-chk{width:18px;height:18px;border:1.5px solid rgba(64,88,238,.4);border-radius:3px;background:rgba(64,88,238,.04);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;margin-top:1px}
+.crit-chk svg{width:11px;height:11px;opacity:0;transform:scale(.5);transition:all .25s}
+.criteria-item.checked .crit-chk{background:var(--green);border-color:var(--green);box-shadow:0 0 10px rgba(34,197,94,.4)}
+.criteria-item.checked .crit-chk svg{opacity:1;transform:scale(1)}
+.crit-text{flex:1;font-size:13px;color:var(--ink2);line-height:1.55}
+.criteria-item.checked .crit-text{color:var(--mid);text-decoration:line-through;text-decoration-color:var(--muted)}
+
+/* Notes */
+.ex-notes{padding:14px 16px;background:rgba(240,180,41,.04);border:1px solid rgba(240,180,41,.14);border-left:2px solid var(--gold);border-radius:0 3px 3px 0}
+.ex-notes .lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px}
+.ex-notes textarea{width:100%;min-height:80px;resize:vertical;font-family:'Lato',sans-serif;font-size:13.5px;color:var(--ink);background:rgba(8,8,16,.4);border:1px solid var(--borderL);border-radius:3px;padding:10px 12px;line-height:1.55;transition:border-color .2s}
+.ex-notes textarea:focus{outline:none;border-color:rgba(240,180,41,.3)}
+.ex-notes textarea::placeholder{color:var(--muted);font-style:italic}
+
+/* Dates */
+.ex-dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;padding:14px 16px;background:rgba(255,255,255,.015);border:1px solid var(--borderL);border-radius:3px}
+.ex-date-item{display:flex;flex-direction:column;gap:3px}
+.ex-date-label{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ex-date-value{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--ink)}
+.ex-date-value.empty{color:var(--muted);font-style:italic;font-weight:400;font-size:12.5px;font-family:'DM Mono',monospace}
+
+/* Actions buttons */
+.ex-actions{display:flex;gap:10px;flex-wrap:wrap}
+.ex-btn{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--ink2);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.ex-btn:hover{border-color:var(--accent);color:var(--ink);background:rgba(64,88,238,.08)}
+.ex-btn svg{width:13px;height:13px}
+.ex-btn.primary{background:rgba(64,88,238,.12);border-color:rgba(64,88,238,.35);color:var(--accent)}
+.ex-btn.primary:hover{background:rgba(64,88,238,.2);box-shadow:0 0 18px rgba(64,88,238,.18)}
+.ex-btn.gold{background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.35);color:var(--gold)}
+.ex-btn.gold:hover{background:rgba(240,180,41,.18);box-shadow:0 0 18px rgba(240,180,41,.18)}
+.ex-btn.green{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);color:var(--green)}
+.ex-btn.green:hover{background:rgba(34,197,94,.18);box-shadow:0 0 18px rgba(34,197,94,.18)}
+.ex-btn.ghost{background:transparent;color:var(--mid)}
+.ex-btn:disabled{opacity:.4;cursor:not-allowed}
+.ex-btn:disabled:hover{border-color:var(--border);color:var(--mid);background:transparent}
+
+/* Analyses */
+.analytics-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:24px 26px;box-shadow:var(--sh-lg);position:relative;overflow:hidden}
+.chart-card::after{content:'';position:absolute;inset:0;border-radius:6px;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.02),transparent 70%);pointer-events:none}
+.chart-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;position:relative;z-index:1}
+.chart-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.chart-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
+.chart-svg-wrap{position:relative;z-index:1;width:100%}
+.chart-empty{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-align:center;padding:40px 20px;letter-spacing:.06em}
+.insights{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.insight{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:3px;border-left:2px solid var(--mid);background:rgba(255,255,255,.015)}
+.insight.good{border-left-color:var(--green);background:rgba(34,197,94,.04)}
+.insight.bad{border-left-color:var(--gold);background:rgba(240,180,41,.04)}
+.insight.neutral{border-left-color:var(--blue);background:rgba(96,165,250,.04)}
+.insight-icon{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--mid);padding-top:2px;min-width:28px}
+.insight.good .insight-icon{color:var(--green)}
+.insight.bad .insight-icon{color:var(--gold)}
+.insight.neutral .insight-icon{color:var(--blue)}
+.insight-text{flex:1;font-size:13px;color:var(--ink2);line-height:1.5}
+.insight-text strong{color:var(--ink);font-weight:700}
+
+/* Debrief final */
+.final-debrief{background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.18);border-left:3px solid var(--green);border-radius:0 4px 4px 0;padding:28px 32px;box-shadow:0 2px 12px rgba(0,0,0,.55),var(--glow-green);position:relative}
+.final-debrief h3{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.final-debrief-intro{font-size:13.5px;color:var(--mid);margin-bottom:24px;max-width:680px}
+.final-debrief-q{margin-bottom:20px}
+.final-debrief-q:last-child{margin-bottom:0}
+.final-debrief-q label{display:block;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+.final-debrief-q textarea{width:100%;min-height:80px;resize:vertical;font-family:'Lato',sans-serif;font-size:14px;color:var(--ink);background:rgba(8,8,16,.5);border:1px solid var(--border);border-radius:3px;padding:12px 14px;line-height:1.55;transition:border-color .2s,box-shadow .2s}
+.final-debrief-q textarea:focus{outline:none;border-color:rgba(34,197,94,.35);box-shadow:0 0 0 3px rgba(34,197,94,.08)}
+.final-debrief-q textarea::placeholder{color:var(--muted);font-style:italic}
+.final-locked{text-align:center;padding:56px 30px;color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em}
+.final-locked svg{width:28px;height:28px;margin:0 auto 14px;display:block;opacity:.4}
+
+/* ============ AIDE ============ */
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.help-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:28px 30px;box-shadow:var(--sh-md);position:relative;overflow:hidden}
+.help-card::after{content:'';position:absolute;inset:0;border-radius:6px;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.025),transparent 70%);pointer-events:none}
+.help-card.full{grid-column:1 / -1}
+.help-card.accent-top{border-top:2px solid var(--accent);box-shadow:var(--sh-md),var(--glow-accent)}
+.help-card.gold-top{border-top:2px solid var(--gold);box-shadow:var(--sh-md),var(--glow-gold)}
+.help-card.blue-top{border-top:2px solid var(--blue);box-shadow:var(--sh-md),var(--glow-blue)}
+.help-card.green-top{border-top:2px solid var(--green);box-shadow:var(--sh-md),var(--glow-green)}
+.help-card-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;position:relative;z-index:1}
+.help-card-num{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.16em;color:var(--accent);opacity:.7;padding-top:4px;min-width:30px}
+.help-card-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink);line-height:1.2;margin-bottom:4px}
+.help-card-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase}
+.help-steps{counter-reset:s;list-style:none;position:relative;z-index:1;display:flex;flex-direction:column;gap:18px}
+.help-steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--borderL)}
+.help-steps li:last-child{border-bottom:none;padding-bottom:0}
+.help-steps[data-parent] li::before{content:attr(data-parent) "." counter(s);font-family:'DM Mono',monospace;font-size:11.5px;font-weight:500;color:var(--accent);opacity:.8;padding-top:2px;letter-spacing:.02em}
+.help-steps:not([data-parent]) li::before{content:counter(s,decimal-leading-zero);font-family:'DM Mono',monospace;font-size:12px;font-weight:500;color:var(--accent);opacity:.75;padding-top:2px}
+.help-step-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.help-step-desc{font-size:13.5px;color:var(--ink2);line-height:1.6}
+.help-step-desc strong{color:var(--ink);font-weight:700}
+.help-step-desc code{font-family:'DM Mono',monospace;font-size:11px;background:rgba(64,88,238,.1);color:var(--accent);padding:2px 8px;border-radius:2px;border:1px solid rgba(64,88,238,.2)}
+.help-callout{margin-top:14px;padding:12px 14px;border-radius:3px;border-left:2px solid var(--gold);background:rgba(240,180,41,.05);display:flex;gap:10px;align-items:flex-start}
+.help-callout.accent{border-left-color:var(--accent);background:rgba(64,88,238,.05)}
+.help-callout.green{border-left-color:var(--green);background:rgba(34,197,94,.05)}
+.help-callout-icon{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--gold);font-weight:500;flex-shrink:0;padding-top:2px}
+.help-callout.accent .help-callout-icon{color:var(--accent)}
+.help-callout.green .help-callout-icon{color:var(--green)}
+.help-callout-text{font-size:12.5px;color:var(--ink2);line-height:1.55}
+.help-callout-text strong{color:var(--ink);font-weight:700}
+.faq-list{display:flex;flex-direction:column;gap:6px;position:relative;z-index:1}
+.faq-item{border:1px solid var(--border);border-radius:4px;background:rgba(255,255,255,.015);overflow:hidden;transition:border-color .2s}
+.faq-item:hover{border-color:rgba(64,88,238,.2)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;cursor:pointer;user-select:none}
+.faq-q-text{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--ink2);line-height:1.35}
+.faq-item:hover .faq-q-text{color:var(--ink)}
+.faq-q-chevron{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:transform .3s,color .25s;flex-shrink:0}
+.faq-q-chevron svg{width:12px;height:12px}
+.faq-item.open .faq-q-chevron{transform:rotate(180deg);color:var(--accent)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.faq-item.open .faq-a{max-height:500px}
+.faq-a-inner{padding:0 18px 16px;font-size:13.5px;color:var(--ink2);line-height:1.65;border-top:1px solid var(--borderL);padding-top:14px;margin-top:-1px}
+.faq-a-inner strong{color:var(--ink);font-weight:700}
+.workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;z-index:1;margin-top:10px}
+.workflow-step{text-align:center;padding:20px 12px;position:relative}
+.workflow-step:not(:last-child)::after{content:'';position:absolute;top:40px;right:-10px;width:20px;height:1px;background:linear-gradient(to right,rgba(64,88,238,.4),transparent);z-index:0}
+.workflow-num{width:44px;height:44px;margin:0 auto 14px;border-radius:50%;background:rgba(64,88,238,.1);border:1.5px solid rgba(64,88,238,.3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--accent);box-shadow:0 0 20px rgba(64,88,238,.15)}
+.workflow-title{font-family:'Playfair Display',serif;font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.workflow-sub{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;line-height:1.5}
+.btn-inline{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:2px;border:1px solid var(--border);background:var(--surf2);font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);vertical-align:middle;margin:0 2px}
+.btn-inline.primary{background:rgba(64,88,238,.12);border-color:rgba(64,88,238,.35);color:var(--accent)}
+.btn-inline.gold{background:rgba(240,180,41,.1);border-color:rgba(240,180,41,.35);color:var(--gold)}
+.btn-inline.green{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.35);color:var(--green)}
+
+/* Actions barre */
+.actions{position:sticky;bottom:20px;z-index:100;margin:60px auto 40px;max-width:900px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;background:rgba(8,8,16,.92);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:6px;padding:14px;box-shadow:var(--sh-lg)}
+.btn{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:11px 18px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--ink2);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--accent);color:var(--ink);background:rgba(64,88,238,.08)}
+.btn svg{width:13px;height:13px}
+.btn.primary{background:rgba(64,88,238,.12);border-color:rgba(64,88,238,.35);color:var(--accent)}
+.btn.primary:hover{background:rgba(64,88,238,.2);box-shadow:0 0 20px rgba(64,88,238,.2)}
+.btn.danger:hover{border-color:rgba(248,113,113,.4);color:var(--red);background:rgba(248,113,113,.06)}
+
+.modal-bg{position:fixed;inset:0;background:rgba(8,8,16,.85);backdrop-filter:blur(6px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:6px;max-width:460px;width:100%;padding:32px;box-shadow:var(--sh-lg);position:relative}
+.modal h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.modal p{font-size:14px;color:var(--ink2);line-height:1.6;margin-bottom:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+footer{padding:60px 52px 40px;max-width:1200px;margin:0 auto;text-align:center;border-top:1px solid var(--borderL);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:none}
+
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--border);padding:14px 22px;border-radius:4px;box-shadow:var(--sh-lg);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink);text-transform:uppercase;opacity:0;transition:all .3s;z-index:400;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-left:3px solid var(--green);box-shadow:var(--sh-md),0 0 30px rgba(34,197,94,.15)}
+.toast.error{border-left:3px solid var(--red)}
+
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .kpi{border-right:none;border-bottom:1px solid var(--borderL)}
+  .kpi:nth-child(odd){border-right:1px solid var(--borderL)}
+  .analytics-grid{grid-template-columns:1fr}
+  .help-grid{grid-template-columns:1fr}
+  .nav-tabs{display:none}
+  .timeline-steps{flex-wrap:wrap;gap:20px}
+  .timeline-step{flex:0 0 calc(33.333% - 14px)}
+  .timeline-line,.timeline-line-fill{display:none}
+  .workflow{grid-template-columns:repeat(2,1fr);gap:14px}
+  .workflow-step:not(:last-child)::after{display:none}
+}
+@media(max-width:720px){
+  .wrap,.hero,.nav-inner,.mode-banner-inner{padding-left:24px;padding-right:24px}
+  .hero{padding:48px 24px 32px}
+  .kpi-grid{grid-template-columns:1fr}
+  .kpi{border-right:none!important}
+  .sec-num-deco{font-size:100px;right:-8px}
+  .landing{padding:48px 24px 40px;min-height:auto}
+  .landing-cards{grid-template-columns:1fr;gap:16px}
+  .landing-card{padding:28px 24px;min-height:auto}
+  .landing-card-title{font-size:24px}
+  .ex-head{padding:18px 20px;flex-wrap:wrap}
+  .ex-body-inner{padding:16px 20px 22px}
+  .timeline-card{padding:22px 20px}
+  .timeline-step{flex:0 0 calc(50% - 10px)}
+  .mode-banner-inner{flex-wrap:wrap}
+}
+</style>
+</head>
+<body class="landing-mode">
+
+<!-- LANDING -->
+<section class="landing" id="landing">
+  <div class="landing-head">
+    <span class="landing-eyebrow">Phase 02 — Exercices</span>
+    <h1>Ton parcours vers la <em>Démo</em></h1>
+    <p>6 exercices à réaliser pour valider ta phase Exercices et passer en démonstration. Chacun est indépendant, à ton rythme — mais garde le cap des 3 mois en tête.</p>
+  </div>
+
+  <div class="landing-cards">
+    <div class="landing-card help" onclick="enterApp('aide')">
+      <div class="landing-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <div class="landing-card-label">Première fois ?</div>
+      <div class="landing-card-title">Page <em>Aide</em></div>
+      <p class="landing-card-desc">Comment remplir chaque exercice, l'envoyer dans ton groupe privé, attendre ma validation et passer au suivant. À lire avant de commencer.</p>
+      <div class="landing-card-cta">
+        <span>Voir le mode d'emploi</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+
+    <div class="landing-card parcours" onclick="enterApp('parcours')">
+      <div class="landing-card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+      </div>
+      <div class="landing-card-label">Prêt à avancer ?</div>
+      <div class="landing-card-title">Mon <em>Parcours</em></div>
+      <p class="landing-card-desc">Timeline des 6 exercices, progression visuelle, dates de soumission et validation. Tout ton suivi BBA vers la phase Démo en un seul endroit.</p>
+      <div class="landing-card-cta">
+        <span>Ouvrir mon parcours</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-footer">
+    <span class="pulse-dot"></span>
+    Bientôt Blindé Académie · Tracker Exercices v1.0
+  </div>
+</section>
+
+<div class="progress-top"><div class="progress-top-fill" id="topBar"></div></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">BBA <em>/</em> Exercices</div>
+    <div class="nav-tabs">
+      <a href="#aide" class="nav-tab">Aide</a>
+      <a href="#parcours" class="nav-tab">Parcours</a>
+      <a href="#analyses" class="nav-tab">Analyses</a>
+      <a href="#debrief-final" class="nav-tab">Debrief final</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="nav-progress-pill">
+        <span class="dot"></span>
+        <span class="val" id="navPct">0%</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Bannière mode AIDE -->
+<div class="mode-banner help-banner">
+  <div class="mode-banner-inner">
+    <div class="mode-banner-label">
+      <span class="mode-dot"></span>
+      Tu consultes <span class="mode-name">l'Aide</span>
+    </div>
+    <div class="mode-banner-actions">
+      <button class="back-home-btn" onclick="backToHome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Retour à l'accueil
+      </button>
+      <button class="back-home-btn" onclick="enterApp('parcours')" style="border-color:rgba(64,88,238,.35);color:var(--accent);background:rgba(64,88,238,.08)">
+        Aller au Parcours
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bannière mode PARCOURS -->
+<div class="mode-banner parcours-banner">
+  <div class="mode-banner-inner">
+    <div class="mode-banner-label">
+      <span class="mode-dot"></span>
+      Tu es sur <span class="mode-name">ton Parcours</span>
+    </div>
+    <div class="mode-banner-actions">
+      <button class="back-home-btn" onclick="backToHome()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Retour à l'accueil
+      </button>
+      <button class="back-home-btn" onclick="enterApp('aide')" style="border-color:rgba(240,180,41,.35);color:var(--gold);background:rgba(240,180,41,.06)">
+        Consulter l'Aide
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<header class="hero fade-in">
+  <span class="hero-eyebrow">Phase 02 — Exercices</span>
+  <h1>Ton parcours <em>Exercices</em></h1>
+  <p class="hero-sub">
+    6 exercices à valider pour passer en démonstration. Objectif conseillé : 3 mois ou moins. 
+    Si c'est plus long, pas de pression — l'accompagnement s'adapte à toi et tes disponibilités 
+    pour que tu progresses au plus vite.
+  </p>
+
+  <div class="kpi-grid">
+    <div class="kpi green-top">
+      <span class="kpi-label">Progression</span>
+      <span class="kpi-value green" id="kpiPct">0%</span>
+      <span class="kpi-sub" id="kpiValidated">0 / 6 validés</span>
+    </div>
+    <div class="kpi blue-top">
+      <span class="kpi-label">Temps écoulé</span>
+      <span class="kpi-value blue" id="kpiWeeks">—</span>
+      <span class="kpi-sub" id="kpiWeeksSub">démarre ton parcours</span>
+    </div>
+    <div class="kpi accent-top">
+      <span class="kpi-label">Rythme</span>
+      <span class="kpi-value accent mini" id="kpiRhythm">—</span>
+      <span class="kpi-sub" id="kpiRhythmSub">—</span>
+    </div>
+    <div class="kpi gold-top">
+      <span class="kpi-label">Exercice actuel</span>
+      <span class="kpi-value gold mini" id="kpiCurrent">Plan</span>
+      <span class="kpi-sub" id="kpiCurrentSub">à démarrer</span>
+    </div>
+    <div class="kpi green-top">
+      <span class="kpi-label">Dernier validé</span>
+      <span class="kpi-value green mini" id="kpiLast">—</span>
+      <span class="kpi-sub" id="kpiLastSub">aucun pour l'instant</span>
+    </div>
+    <div class="kpi blue-top">
+      <span class="kpi-label">Temps restant estimé</span>
+      <span class="kpi-value blue mini" id="kpiRemain">—</span>
+      <span class="kpi-sub" id="kpiRemainSub">—</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- AIDE -->
+  <section id="aide">
+    <div class="sec-head fade-in">
+      <span class="sec-num-deco">01</span>
+      <span class="sec-tag">Aide & mode d'emploi</span>
+      <h2>Comment utiliser ton <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--accent)">tracker</em></h2>
+      <p>Ce tracker est ton compagnon pendant toute la phase Exercices. Tu avances exercice par exercice, à ton rythme, jusqu'à valider les 6 et passer en démo.</p>
+    </div>
+
+    <div class="help-card full accent-top fade-in">
+      <div class="help-card-head">
+        <div class="help-card-num">01</div>
+        <div>
+          <div class="help-card-title">Ton workflow par exercice</div>
+          <div class="help-card-sub">Le cycle à répéter pour chaque exercice</div>
+        </div>
+      </div>
+      <div class="workflow">
+        <div class="workflow-step">
+          <div class="workflow-num">1</div>
+          <div class="workflow-title">Démarrer</div>
+          <div class="workflow-sub">Clique sur<br>"Commencer"</div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-num">2</div>
+          <div class="workflow-title">Réaliser</div>
+          <div class="workflow-sub">Suivre la consigne<br>coche les critères</div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-num">3</div>
+          <div class="workflow-title">Envoyer</div>
+          <div class="workflow-sub">Dans ton groupe<br>privé Telegram</div>
+        </div>
+        <div class="workflow-step">
+          <div class="workflow-num">4</div>
+          <div class="workflow-title">Valider</div>
+          <div class="workflow-sub">Coche la case quand<br>c'est confirmé</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-grid" style="margin-top:18px">
+
+      <div class="help-card accent-top fade-in">
+        <div class="help-card-head">
+          <div class="help-card-num">02</div>
+          <div>
+            <div class="help-card-title">Réaliser un exercice</div>
+            <div class="help-card-sub">À ton rythme, sans pression</div>
+          </div>
+        </div>
+        <ol class="help-steps" data-parent="2">
+          <li>
+            <div>
+              <div class="help-step-title">Ouvre la carte de l'exercice</div>
+              <p class="help-step-desc">Clique sur la carte de l'exercice en cours pour voir la <strong>consigne complète</strong> et les <strong>critères à respecter</strong>. Un seul exercice est "actif" à la fois.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Clique sur <span class="btn-inline primary">▶ Commencer</span></div>
+              <p class="help-step-desc">Ça enregistre ta <strong>date de début</strong> et te laisse accès à la zone de notes. Tu peux maintenant prendre ton temps pour réaliser l'exercice.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Coche les critères au fur et à mesure</div>
+              <p class="help-step-desc">Chaque exercice a une <strong>checklist de critères</strong> à respecter. Coche-les quand tu les valides. Ça te sert de guide pour ne rien oublier avant d'envoyer.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Prends des notes (optionnel)</div>
+              <p class="help-step-desc">La zone "Tes notes" te permet de garder une trace de ce que tu as appris, ce qui t'a posé problème, ce que tu veux retenir. Utile pour revenir en arrière plus tard.</p>
+              <div class="help-callout accent">
+                <span class="help-callout-icon">NB</span>
+                <span class="help-callout-text">Tes données sont sauvegardées <strong>automatiquement</strong> dans ton navigateur. Utilise toujours le même appareil — sinon, exporte ton JSON et importe-le sur le nouveau.</span>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="help-card gold-top fade-in">
+        <div class="help-card-head">
+          <div class="help-card-num">03</div>
+          <div>
+            <div class="help-card-title">Envoyer dans ton groupe privé</div>
+            <div class="help-card-sub">Groupe privé Telegram</div>
+          </div>
+        </div>
+        <ol class="help-steps" data-parent="3">
+          <li>
+            <div>
+              <div class="help-step-title">Prépare ton rendu</div>
+              <p class="help-step-desc">Selon l'exercice : une capture d'écran TradingView, un document complété, tes deux graphiques annotés. Tout est précisé dans la consigne de chaque exercice.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Clique sur <span class="btn-inline gold">✓ J'ai envoyé mon rendu</span></div>
+              <p class="help-step-desc">Ça enregistre la <strong>date de soumission</strong> et passe ton exercice en statut "En attente de validation". L'exercice devient or dans la timeline.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Envoie ton rendu dans ton groupe privé</div>
+              <p class="help-step-desc">Dans ton <strong>groupe privé Telegram</strong>, envoie ton rendu avec une courte description. Tu recevras un retour détaillé et une validation.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Clique sur <span class="btn-inline green">✓ Validé</span></div>
+              <p class="help-step-desc">Quand la validation est confirmée dans ton groupe privé, clique sur ce bouton dans la carte de l'exercice. Ta timeline avance automatiquement à l'exercice suivant.</p>
+              <div class="help-callout green">
+                <span class="help-callout-icon">OK</span>
+                <span class="help-callout-text">Si des corrections te sont demandées : clique sur <strong>"Revenir en cours"</strong> pour rouvrir l'exercice et le retravailler.</span>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="help-card full blue-top fade-in">
+        <div class="help-card-head">
+          <div class="help-card-num">04</div>
+          <div>
+            <div class="help-card-title">Export JSON & sauvegarde</div>
+            <div class="help-card-sub">Important pour ne pas perdre ton travail</div>
+          </div>
+        </div>
+        <ol class="help-steps" data-parent="4">
+          <li>
+            <div>
+              <div class="help-step-title">Exporte ton JSON chaque semaine</div>
+              <p class="help-step-desc">Clique sur <span class="btn-inline">↓ Exporter JSON</span> en bas du document, au moins <strong>une fois par semaine</strong>. Ça te fait une sauvegarde locale de toute ta progression (exercices, notes, dates).</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Envoie-le dans ton groupe privé</div>
+              <p class="help-step-desc">Une fois l'export téléchargé, <strong>envoie-le dans ton groupe privé Telegram</strong>. Ça permet d'avoir une vue complète de ton avancée et de recevoir des retours précis.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Importe ton JSON si tu changes d'appareil</div>
+              <p class="help-step-desc">Sur le nouvel appareil, clique sur <span class="btn-inline">↑ Importer JSON</span> et sélectionne ton dernier export. Toute ta progression est restaurée à l'identique.</p>
+              <div class="help-callout">
+                <span class="help-callout-icon">!</span>
+                <span class="help-callout-text">Pas de cloud automatique : la <strong>seule façon</strong> de récupérer ton travail en cas de problème, c'est l'export JSON. Prends l'habitude.</span>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="help-card full green-top fade-in">
+        <div class="help-card-head">
+          <div class="help-card-num">05</div>
+          <div>
+            <div class="help-card-title">Le rythme et ton délai de 3 mois</div>
+            <div class="help-card-sub">L'accompagnement s'adapte à toi</div>
+          </div>
+        </div>
+        <ol class="help-steps" data-parent="5">
+          <li>
+            <div>
+              <div class="help-step-title">L'objectif idéal : 3 mois ou moins</div>
+              <p class="help-step-desc">La moyenne est de <strong>2 semaines par exercice</strong> pour couvrir les 6 en 12 semaines. C'est un repère, pas une obligation.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Si tu es en retard, pas de panique</div>
+              <p class="help-step-desc">L'accompagnement <strong>s'adapte à tes disponibilités</strong>. Mieux vaut avancer lentement et proprement que baclée. Le KPI "Rythme" t'indique juste où tu en es par rapport à la cible.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">L'Évaluation Technique est pour les débutants</div>
+              <p class="help-step-desc">L'exercice <strong>Évaluation Technique (bonus)</strong> est <strong>obligatoire pour tous les débutants en trading</strong>. Elle valide tes fondamentaux avant de passer aux exercices de prise de position.</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="help-step-title">Un Debrief final t'attend à la fin</div>
+              <p class="help-step-desc">Une fois tes 6 exercices validés, une section <strong>Debrief final</strong> s'active. Tu y fais le bilan de ta phase Exercices et tu te prépares mentalement à la démo.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div class="help-card full fade-in">
+        <div class="help-card-head">
+          <div class="help-card-num">06</div>
+          <div>
+            <div class="help-card-title">Questions fréquentes</div>
+            <div class="help-card-sub">Clique pour déplier la réponse</div>
+          </div>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">Je peux faire les exercices dans l'ordre que je veux ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">Non. L'ordre est <strong>pédagogique</strong> : chaque exercice s'appuie sur les compétences validées par le précédent. Tu dois valider Plan avant Tendance, Tendance avant Zone Clé, etc. Les exercices se débloquent au fur et à mesure.</div></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">Des corrections m'ont été demandées, que faire ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">Ouvre la carte de l'exercice concerné et clique sur <strong>"Revenir en cours"</strong>. Il repasse en statut actif, tu peux corriger, mettre à jour tes notes, puis cliquer à nouveau sur "J'ai envoyé mon rendu" quand c'est prêt.</div></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">Je bloque sur un exercice, que faire ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">Envoie directement un message dans ton <strong>groupe privé</strong> pour en parler. Mieux vaut demander que rester bloqué. Les échanges sur les difficultés sont la partie la plus enrichissante de l'accompagnement.</div></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">J'ai déjà de l'expérience, je peux sauter l'Évaluation Technique ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">Non. <strong>Obligatoire pour tous les débutants</strong>. Si tu as déjà une solide expérience en trading, signale-le dans ton groupe privé — une décision sera prise pour savoir si tu peux la marquer validée sans la refaire.</div></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">Que se passe-t-il à la fin des 6 exercices ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">La section <strong>Debrief final</strong> s'active automatiquement. Tu remplis 3 questions de bilan, tu exportes ton JSON final, tu l'envoies dans ton groupe privé, et tu <strong>passes en Phase 3 (Démonstration)</strong>. Tu recevras un nouveau document : le Dashboard Hebdomadaire Démo.</div></div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFAQ(this)">
+              <span class="faq-q-text">Si je dépasse les 3 mois, il se passe quoi ?</span>
+              <span class="faq-q-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
+            </div>
+            <div class="faq-a"><div class="faq-a-inner">Rien de grave. <strong>L'accompagnement s'adapte à toi et tes disponibilités pour que tu progresses au plus vite.</strong> L'important est la qualité du travail, pas la vitesse. Mieux vaut mettre 4 mois et maîtriser vraiment, que baclée en 6 semaines.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PARCOURS -->
+  <section id="parcours">
+    <div class="sec-head fade-in">
+      <span class="sec-num-deco">02</span>
+      <span class="sec-tag">Ton parcours</span>
+      <h2>Les 6 exercices vers la démo</h2>
+      <p>Clique sur chaque exercice pour voir la consigne, les critères et le suivi. Un seul exercice actif à la fois.</p>
+    </div>
+
+    <!-- Message motivant -->
+    <div class="motiv-card fade-in" id="motivCard">
+      <div class="motiv-icon" id="motivIcon">→</div>
+      <div class="motiv-text">
+        <div class="motiv-title" id="motivTitle">Prêt à démarrer ton parcours</div>
+        <div class="motiv-desc" id="motivDesc">Clique sur "Commencer" dans le premier exercice pour lancer ton chronomètre.</div>
+      </div>
+    </div>
+
+    <!-- Timeline horizontale -->
+    <div class="timeline-card fade-in">
+      <div class="timeline-head">
+        <div>
+          <div class="timeline-title">Vue d'ensemble du parcours</div>
+          <div class="timeline-sub" id="timelineSub">6 exercices · objectif 3 mois</div>
+        </div>
+        <div class="rhythm-badge ontime" id="rhythmBadge">— Démarre ton parcours —</div>
+      </div>
+      <div class="timeline-track">
+        <div class="timeline-line"></div>
+        <div class="timeline-line-fill" id="timelineFill"></div>
+        <div class="timeline-steps" id="timelineSteps"></div>
+      </div>
+    </div>
+
+    <!-- Cards des exercices -->
+    <div class="ex-grid" id="exGrid"></div>
+  </section>
+
+  <!-- ANALYSES -->
+  <section id="analyses">
+    <div class="sec-head fade-in">
+      <span class="sec-num-deco">03</span>
+      <span class="sec-tag">Analyses</span>
+      <h2>Ton avancée dans le temps</h2>
+      <p>La courbe cumulée montre ton rythme de validation. La ligne pointillée représente le rythme cible (1 exercice toutes les 2 semaines).</p>
+    </div>
+
+    <div class="analytics-grid fade-in">
+      <div class="chart-card">
+        <div class="chart-head">
+          <div>
+            <div class="chart-title">Courbe de progression</div>
+            <div class="chart-sub">Exercices validés vs temps écoulé</div>
+          </div>
+        </div>
+        <div class="chart-svg-wrap" id="progressChart"></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <div>
+            <div class="chart-title">Observations</div>
+            <div class="chart-sub">Lecture automatique de ton parcours</div>
+          </div>
+        </div>
+        <div class="insights" id="insights"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEBRIEF FINAL -->
+  <section id="debrief-final">
+    <div class="sec-head fade-in">
+      <span class="sec-num-deco">04</span>
+      <span class="sec-tag">Debrief final</span>
+      <h2>Bilan de ta phase <em style="font-family:'Playfair Display',serif;font-style:italic;color:var(--green)">Exercices</em></h2>
+      <p>Cette section s'active quand tes 6 exercices sont validés. Tu y fais le bilan avant de passer en démo.</p>
+    </div>
+
+    <div id="finalDebriefContent"></div>
+  </section>
+
+  <div class="actions fade-in">
+    <button class="btn" onclick="exportJSON()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+      Exporter JSON
+    </button>
+    <button class="btn" onclick="document.getElementById('importFile').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21V9m0 0l-4 4m4-4l4 4M4 3h16"/></svg>
+      Importer JSON
+    </button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+    <button class="btn danger" onclick="showModal('reset')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>
+      Reset total
+    </button>
+  </div>
+
+</main>
+
+<footer>Bientôt Blindé Académie · Phase Exercices · Tracker v1.0</footer>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+    <div class="modal-actions">
+      <button class="btn" onclick="hideModal()">Annuler</button>
+      <button class="btn primary" id="modalConfirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ EXERCICES DATA ============
+const EXERCICES = [
+  {
+    id:'ex1', num:1, title:'Exercice Plan', time:'10 à 15 min',
+    consigne:[
+      'Remplir la partie <strong>Money Management & Annulation du compte</strong> de ton plan de trading.',
+      'Cet exercice est rapide mais fondamental : ton plan est le contrat que tu signes avec toi-même avant chaque trade.'
+    ],
+    criteria:[
+      'Partie "Money Management" complétée (risque par trade défini)',
+      'Règle d\'annulation du compte définie (perte max tolérée)',
+      'Règles claires, courtes, non-négociables'
+    ]
+  },
+  {
+    id:'ex2', num:2, title:'Exercice Tendance', time:'30 à 45 min',
+    consigne:[
+      'Copie-colle ton graphique avec ta tendance <strong>haussière ou baissière</strong>.',
+      'Choisis la <strong>meilleure unité de temps</strong> entre Journalier et H1 (D — H4 — H3 — H2 — H1) pour détecter la tendance.'
+    ],
+    criteria:[
+      'Graphique copié-collé dans ton rendu',
+      'Tendance clairement identifiée (haussière ou baissière)',
+      'Bonne unité de temps sélectionnée et justifiée',
+      'Points de structure tracés sur le graphique'
+    ]
+  },
+  {
+    id:'ex3', num:3, title:'Exercice Zone Clé', time:'45 à 60 min',
+    consigne:[
+      'Tu dois avoir un <strong>seul graphique par paire de devises</strong>.',
+      'Identifie une <strong>structure de retournement</strong> et trace la <strong>zone clé</strong>.',
+      'Exemple de référence : AUDJPY (première ligne — 1er exercice).'
+    ],
+    criteria:[
+      'Un seul graphique par paire',
+      'Structure de retournement identifiée',
+      'Zone clé tracée avec précision',
+      'Paire conforme au format attendu (exemple AUDJPY)'
+    ]
+  },
+  {
+    id:'ex4', num:4, title:'Évaluation Technique', time:'Variable', bonus:true,
+    consigne:[
+      '<strong>Obligatoire pour tous les débutants en trading.</strong>',
+      'Cette évaluation valide tes fondamentaux avant de passer aux exercices de prise de position.',
+      'Signale-toi dans ton groupe privé pour recevoir les modalités exactes de l\'évaluation.'
+    ],
+    criteria:[
+      'Évaluation demandée via le groupe privé',
+      'Évaluation complétée dans les délais',
+      'Retour reçu et compris',
+      'Si points faibles identifiés : travail effectué pour les combler'
+    ]
+  },
+  {
+    id:'ex5', num:5, title:'Prise de Position V1', time:'1h à 1h30',
+    consigne:[
+      'Copie-colle tes <strong>deux graphiques</strong> demandés.',
+      'Identifie une tendance haussière ou baissière avec <strong>minimum 3 touches</strong>.',
+      'Identifie la bonne unité de temps de la tendance <strong>+ de la deuxième structure</strong> (figure de retournement).',
+      'Trace ta zone clé. ✅ (Exemple AUDJPY)',
+      'Toujours : le graphique de la tendance <strong>et</strong> le graphique de l\'analyse sur l\'unité de temps de prise de position.'
+    ],
+    criteria:[
+      'Deux graphiques dans ton rendu',
+      'Tendance identifiée avec minimum 3 touches',
+      'Bonne unité de temps de la tendance sélectionnée',
+      'Deuxième structure identifiée (figure de retournement)',
+      'Zone clé tracée',
+      'Graphique de la tendance + graphique de l\'UT de prise de position'
+    ]
+  },
+  {
+    id:'ex6', num:6, title:'Prise de Position V2', time:'1h à 1h30',
+    consigne:[
+      'Copie-colle tes <strong>deux graphiques</strong> demandés.',
+      'Identifie une tendance haussière ou baissière avec <strong>minimum 2 touches</strong>.',
+      'Identifie la bonne unité de temps de la tendance <strong>+ de la deuxième structure</strong> (figure de continuation).',
+      'Trace ta zone clé. ✅ (Exemple AUDJPY)',
+      'Toujours : le graphique de la tendance <strong>et</strong> le graphique de l\'analyse sur l\'unité de temps de prise de position.'
+    ],
+    criteria:[
+      'Deux graphiques dans ton rendu',
+      'Tendance identifiée avec minimum 2 touches',
+      'Bonne unité de temps de la tendance sélectionnée',
+      'Deuxième structure identifiée (figure de continuation)',
+      'Zone clé tracée',
+      'Graphique de la tendance + graphique de l\'UT de prise de position'
+    ]
+  }
+];
+
+const TOTAL_EX = EXERCICES.length;
+const TARGET_WEEKS = 12; // 3 mois
+const TARGET_WEEKS_PER_EX = TARGET_WEEKS / TOTAL_EX; // 2 semaines par exercice
+
+// ============ STATE ============
+// statuses: 'locked' | 'active' | 'sent' | 'validated'
+let state = {
+  startedAt: null,        // date début du parcours (premier clic sur Commencer)
+  exercises: {},          // { ex1: {status, startedAt, sentAt, validatedAt, notes, criteria:{critId:bool}} }
+  finalDebrief: {d1:'', d2:'', d3:''}
+};
+
+// ============ UTILS ============
+function initExState(){
+  EXERCICES.forEach((ex, i) => {
+    if(!state.exercises[ex.id]){
+      state.exercises[ex.id] = {
+        status: i === 0 ? 'active' : 'locked',
+        startedAt: null,
+        sentAt: null,
+        validatedAt: null,
+        notes: '',
+        criteria: {}
+      };
+    }
+  });
+}
+
+function getExStatus(exId){
+  return (state.exercises[exId] && state.exercises[exId].status) || 'locked';
+}
+
+function getValidatedCount(){
+  return EXERCICES.filter(ex => getExStatus(ex.id) === 'validated').length;
+}
+
+function getCurrentEx(){
+  return EXERCICES.find(ex => getExStatus(ex.id) === 'active' || getExStatus(ex.id) === 'sent') || null;
+}
+
+function getLastValidated(){
+  const validated = EXERCICES.filter(ex => getExStatus(ex.id) === 'validated');
+  if(validated.length === 0) return null;
+  return validated.reduce((a,b) => {
+    const aTime = new Date(state.exercises[a.id].validatedAt).getTime();
+    const bTime = new Date(state.exercises[b.id].validatedAt).getTime();
+    return bTime > aTime ? b : a;
+  });
+}
+
+function weeksSinceStart(){
+  if(!state.startedAt) return 0;
+  const ms = Date.now() - new Date(state.startedAt).getTime();
+  return ms / (1000 * 60 * 60 * 24 * 7);
+}
+
+function formatDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+// ============ STORAGE ============
+function save(){
+  try{ localStorage.setItem('bba_exercices_state_v1', JSON.stringify(state)); }
+  catch(e){ console.error('Save error',e) }
+}
+function load(){
+  try{
+    const raw = localStorage.getItem('bba_exercices_state_v1');
+    if(raw){
+      const loaded = JSON.parse(raw);
+      state = {
+        startedAt: loaded.startedAt || null,
+        exercises: loaded.exercises || {},
+        finalDebrief: loaded.finalDebrief || {d1:'',d2:'',d3:''}
+      };
+    }
+  }catch(e){}
+  initExState();
+}
+
+// ============ RENDER ============
+function render(){
+  renderKPIs();
+  renderMotiv();
+  renderTimeline();
+  renderExercises();
+  renderChart();
+  renderInsights();
+  renderFinalDebrief();
+  observeFades();
+}
+
+// KPIs
+function renderKPIs(){
+  const validated = getValidatedCount();
+  const pct = Math.round((validated / TOTAL_EX) * 100);
+
+  // Top progress bar
+  const bar = document.getElementById('topBar');
+  bar.style.width = pct+'%';
+  bar.classList.remove('low','mid','high','done');
+  if(pct === 100) bar.classList.add('done');
+  else if(pct >= 67) bar.classList.add('high');
+  else if(pct >= 34) bar.classList.add('mid');
+  else if(pct > 0) bar.classList.add('low');
+
+  document.getElementById('navPct').textContent = pct+'%';
+  document.getElementById('kpiPct').textContent = pct+'%';
+  document.getElementById('kpiValidated').textContent = `${validated} / ${TOTAL_EX} validés`;
+
+  // Temps écoulé
+  const weeks = weeksSinceStart();
+  if(!state.startedAt){
+    document.getElementById('kpiWeeks').textContent = '—';
+    document.getElementById('kpiWeeksSub').textContent = 'démarre ton parcours';
+  }else{
+    document.getElementById('kpiWeeks').textContent = `${weeks.toFixed(1)} sem.`;
+    document.getElementById('kpiWeeksSub').textContent = `depuis le ${formatDate(state.startedAt)}`;
+  }
+
+  // Rythme
+  let rhythmLabel = '—', rhythmSub = '—';
+  if(!state.startedAt || validated === 0){
+    rhythmLabel = '—';
+    rhythmSub = 'démarre un exercice';
+  }else{
+    const expectedAtWeek = weeks / TARGET_WEEKS_PER_EX;
+    const diff = validated - expectedAtWeek;
+    if(weeks < 0.5){
+      rhythmLabel = 'Au début';
+      rhythmSub = 'trop tôt pour juger';
+    }else if(diff >= 0.5){
+      rhythmLabel = 'En avance';
+      rhythmSub = `+${diff.toFixed(1)} ex. vs cible`;
+    }else if(diff >= -0.5){
+      rhythmLabel = 'Dans les temps';
+      rhythmSub = 'au bon rythme';
+    }else{
+      rhythmLabel = 'À ton rythme';
+      rhythmSub = 'pas de pression';
+    }
+  }
+  document.getElementById('kpiRhythm').textContent = rhythmLabel;
+  document.getElementById('kpiRhythmSub').textContent = rhythmSub;
+
+  // Exercice actuel
+  const current = getCurrentEx();
+  if(current){
+    document.getElementById('kpiCurrent').textContent = current.title.replace('Exercice ','').replace('Prise de Position ','Prise Pos. ');
+    const s = state.exercises[current.id];
+    if(s.status === 'sent') document.getElementById('kpiCurrentSub').textContent = 'en attente de validation';
+    else if(s.startedAt) document.getElementById('kpiCurrentSub').textContent = `démarré le ${formatDate(s.startedAt)}`;
+    else document.getElementById('kpiCurrentSub').textContent = 'à démarrer';
+  }else if(validated === TOTAL_EX){
+    document.getElementById('kpiCurrent').textContent = 'Terminé';
+    document.getElementById('kpiCurrentSub').textContent = 'phase Démo t\'attend';
+  }else{
+    document.getElementById('kpiCurrent').textContent = '—';
+    document.getElementById('kpiCurrentSub').textContent = '—';
+  }
+
+  // Dernier validé
+  const last = getLastValidated();
+  if(last){
+    document.getElementById('kpiLast').textContent = last.title.replace('Exercice ','').replace('Prise de Position ','Prise Pos. ');
+    document.getElementById('kpiLastSub').textContent = `le ${formatDate(state.exercises[last.id].validatedAt)}`;
+  }else{
+    document.getElementById('kpiLast').textContent = '—';
+    document.getElementById('kpiLastSub').textContent = 'aucun pour l\'instant';
+  }
+
+  // Temps restant estimé
+  if(validated === 0 || !state.startedAt){
+    document.getElementById('kpiRemain').textContent = '—';
+    document.getElementById('kpiRemainSub').textContent = 'démarre un exercice';
+  }else if(validated === TOTAL_EX){
+    document.getElementById('kpiRemain').textContent = 'Terminé';
+    document.getElementById('kpiRemainSub').textContent = 'bravo 🔥';
+  }else{
+    const avgWeeksPerEx = weeks / validated;
+    const remaining = TOTAL_EX - validated;
+    const estWeeks = avgWeeksPerEx * remaining;
+    document.getElementById('kpiRemain').textContent = `~${estWeeks.toFixed(1)} sem.`;
+    document.getElementById('kpiRemainSub').textContent = `à ton rythme actuel`;
+  }
+}
+
+// Message motivant
+function renderMotiv(){
+  const card = document.getElementById('motivCard');
+  const icon = document.getElementById('motivIcon');
+  const title = document.getElementById('motivTitle');
+  const desc = document.getElementById('motivDesc');
+  const validated = getValidatedCount();
+  const weeks = weeksSinceStart();
+
+  card.classList.remove('ahead','ontime','gentle');
+
+  if(validated === TOTAL_EX){
+    card.classList.add('ahead');
+    icon.textContent = '🔥';
+    title.textContent = 'Parcours Exercices complété';
+    desc.innerHTML = `Bravo. Tes 6 exercices sont validés — direction la <em>phase Démonstration</em>. Remplis ton debrief final et envoie-le dans ton groupe privé.`;
+    return;
+  }
+
+  if(!state.startedAt || validated === 0){
+    card.classList.add('ontime');
+    icon.textContent = '→';
+    title.textContent = 'Prêt à démarrer ton parcours';
+    desc.innerHTML = `Ouvre la carte du <strong>premier exercice</strong> et clique sur "Commencer". Ton chronomètre démarre à ce moment-là.`;
+    return;
+  }
+
+  const expectedAtWeek = weeks / TARGET_WEEKS_PER_EX;
+  const diff = validated - expectedAtWeek;
+
+  if(weeks < 0.5){
+    card.classList.add('ontime');
+    icon.textContent = '→';
+    title.textContent = 'Tu viens de démarrer';
+    desc.innerHTML = `Trop tôt pour juger le rythme. Concentre-toi sur la qualité de l'exercice en cours — la vitesse viendra naturellement.`;
+  }else if(diff >= 0.5){
+    card.classList.add('ahead');
+    icon.textContent = '🔥';
+    title.textContent = 'Tu es en avance sur le rythme';
+    desc.innerHTML = `Excellent rythme. Continue comme ça — mais ne sacrifie pas la qualité pour la vitesse. <em>Mieux vaut un exercice juste que trois baclés.</em>`;
+  }else if(diff >= -0.5){
+    card.classList.add('ontime');
+    icon.textContent = '✓';
+    title.textContent = 'Tu avances au bon rythme';
+    desc.innerHTML = `Tu es dans les temps pour viser les 3 mois. Reste régulier, c'est ce qui fait la différence sur la durée.`;
+  }else{
+    card.classList.add('gentle');
+    icon.textContent = '💡';
+    title.textContent = 'Pas de pression';
+    desc.innerHTML = `<em>L'accompagnement s'adapte à toi et tes disponibilités pour que tu progresses au plus vite.</em> Mieux vaut avancer lentement et proprement que baclé. L'important est la qualité du travail.`;
+  }
+}
+
+// Timeline
+function renderTimeline(){
+  const stepsWrap = document.getElementById('timelineSteps');
+  const fill = document.getElementById('timelineFill');
+  const validated = getValidatedCount();
+  const pct = (validated / (TOTAL_EX - 1)) * 100;
+  fill.style.width = Math.min(100, pct)+'%';
+  fill.classList.toggle('complete', validated === TOTAL_EX);
+
+  stepsWrap.innerHTML = EXERCICES.map(ex => {
+    const status = getExStatus(ex.id);
+    const shortName = ex.title.replace('Exercice ','').replace('Prise de Position ','Prise Pos. ');
+    let statusLabel = '';
+    if(status === 'validated') statusLabel = '✓ Validé';
+    else if(status === 'sent') statusLabel = '⏳ Envoyé';
+    else if(status === 'active') statusLabel = '● En cours';
+    else statusLabel = '— À venir';
+
+    return `
+      <div class="timeline-step ${status}" onclick="scrollToEx('${ex.id}')">
+        <div class="ts-circle">${ex.num}</div>
+        <div class="ts-label">${shortName}</div>
+        ${ex.bonus ? `<span class="ts-bonus">Bonus</span>` : ''}
+        <div class="ts-status">${statusLabel}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Update sub
+  const sub = document.getElementById('timelineSub');
+  sub.textContent = `${validated} / ${TOTAL_EX} validés · objectif 3 mois`;
+
+  // Rhythm badge
+  const badge = document.getElementById('rhythmBadge');
+  badge.classList.remove('ahead','ontime','gentle');
+  if(validated === TOTAL_EX){
+    badge.classList.add('ahead');
+    badge.textContent = '🔥 Parcours complété';
+  }else if(!state.startedAt || validated === 0){
+    badge.classList.add('ontime');
+    badge.textContent = '→ Démarre ton parcours';
+  }else{
+    const weeks = weeksSinceStart();
+    const expectedAtWeek = weeks / TARGET_WEEKS_PER_EX;
+    const diff = validated - expectedAtWeek;
+    if(weeks < 0.5){
+      badge.classList.add('ontime');
+      badge.textContent = '→ Au début du parcours';
+    }else if(diff >= 0.5){
+      badge.classList.add('ahead');
+      badge.textContent = '↑ En avance sur la cible';
+    }else if(diff >= -0.5){
+      badge.classList.add('ontime');
+      badge.textContent = '→ Dans les temps';
+    }else{
+      badge.classList.add('gentle');
+      badge.textContent = '≈ À ton rythme';
+    }
+  }
+}
+
+function scrollToEx(exId){
+  const el = document.querySelector(`[data-ex="${exId}"]`);
+  if(el){
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('open');
+  }
+}
+window.scrollToEx = scrollToEx;
+
+// Exercices
+function renderExercises(){
+  // Mémoriser les cards ouvertes avant re-render
+  const openExIds = Array.from(document.querySelectorAll('.ex-card.open')).map(el => el.dataset.ex);
+
+  const grid = document.getElementById('exGrid');
+  grid.innerHTML = EXERCICES.map(ex => {
+    const s = state.exercises[ex.id];
+    const status = s.status;
+    return `
+      <div class="ex-card ${status} ${ex.bonus?'bonus':''}" data-ex="${ex.id}">
+        <div class="ex-head" onclick="toggleExOpen('${ex.id}')">
+          <div class="ex-head-left">
+            <div class="ex-num-circle">${ex.num}</div>
+            <div class="ex-head-info">
+              <div class="ex-titles-row">
+                <span class="ex-title">${ex.title}</span>
+                ${ex.bonus ? `<span class="ex-bonus-tag">Bonus · Débutants</span>` : ''}
+              </div>
+              <div class="ex-meta">
+                <span>${ex.time}</span>
+                <span class="ex-meta-dot"></span>
+                <span>${ex.criteria.length} critères</span>
+              </div>
+            </div>
+          </div>
+          <span class="ex-status-pill">${statusLabel(status)}</span>
+          <div class="ex-chevron">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="ex-body">
+          <div class="ex-body-inner">
+            <div class="ex-consigne">
+              <span class="lbl">Consigne</span>
+              ${ex.consigne.map(p => `<p>${p}</p>`).join('')}
+            </div>
+
+            ${renderCriteria(ex, s)}
+
+            ${renderDates(s)}
+
+            ${status !== 'locked' ? renderNotes(ex, s) : ''}
+
+            <div class="ex-actions">${renderActions(ex, s)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  // Restaurer les cards qui étaient ouvertes
+  openExIds.forEach(id => {
+    const el = document.querySelector(`[data-ex="${id}"]`);
+    if(el) el.classList.add('open');
+  });
+  bindExInputs();
+}
+
+function statusLabel(status){
+  if(status === 'validated') return '✓ Validé';
+  if(status === 'sent') return '⏳ En attente de validation';
+  if(status === 'active') return '● En cours';
+  return '🔒 À venir';
+}
+
+function renderCriteria(ex, s){
+  return `
+    <div class="ex-criteria">
+      <span class="lbl">Critères à respecter</span>
+      ${ex.criteria.map((crit, i) => {
+        const critId = `c${i}`;
+        const checked = !!s.criteria[critId];
+        const disabled = s.status === 'locked' || s.status === 'validated';
+        return `
+          <div class="criteria-item ${checked?'checked':''}" ${!disabled ? `onclick="toggleCriterion('${ex.id}','${critId}')"` : 'style="cursor:default;opacity:.7"'}>
+            <div class="crit-chk">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#080810" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="crit-text">${crit}</span>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderDates(s){
+  return `
+    <div class="ex-dates">
+      <div class="ex-date-item">
+        <span class="ex-date-label">Démarré</span>
+        <span class="ex-date-value ${!s.startedAt?'empty':''}">${s.startedAt ? formatDate(s.startedAt) : 'Pas encore'}</span>
+      </div>
+      <div class="ex-date-item">
+        <span class="ex-date-label">Envoyé</span>
+        <span class="ex-date-value ${!s.sentAt?'empty':''}">${s.sentAt ? formatDate(s.sentAt) : 'Pas encore'}</span>
+      </div>
+      <div class="ex-date-item">
+        <span class="ex-date-label">Validé</span>
+        <span class="ex-date-value ${!s.validatedAt?'empty':''}">${s.validatedAt ? formatDate(s.validatedAt) : 'Pas encore'}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderNotes(ex, s){
+  return `
+    <div class="ex-notes">
+      <span class="lbl">Tes notes / observations</span>
+      <textarea data-notes="${ex.id}" placeholder="Ce que tu as appris, tes difficultés, les questions à poser..." ${s.status === 'validated' ? 'readonly' : ''}>${(s.notes||'').replace(/</g,'&lt;')}</textarea>
+    </div>
+  `;
+}
+
+function renderActions(ex, s){
+  const status = s.status;
+  const buttons = [];
+
+  if(status === 'locked'){
+    buttons.push(`<span class="ex-btn ghost" style="cursor:default">🔒 Valide l'exercice précédent pour débloquer</span>`);
+  }
+  else if(status === 'active' && !s.startedAt){
+    buttons.push(`<button class="ex-btn primary" onclick="startEx('${ex.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Commencer
+    </button>`);
+  }
+  else if(status === 'active' && s.startedAt){
+    buttons.push(`<button class="ex-btn gold" onclick="markSent('${ex.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      J'ai envoyé mon rendu
+    </button>`);
+  }
+  else if(status === 'sent'){
+    buttons.push(`<button class="ex-btn green" onclick="markValidated('${ex.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      Validé
+    </button>`);
+    buttons.push(`<button class="ex-btn" onclick="revertToActive('${ex.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
+      Revenir en cours
+    </button>`);
+  }
+  else if(status === 'validated'){
+    buttons.push(`<span class="ex-btn ghost" style="cursor:default;color:var(--green)">✓ Exercice validé</span>`);
+    buttons.push(`<button class="ex-btn" onclick="revertToSent('${ex.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><polyline points="3 4 3 12 11 12"/></svg>
+      Annuler la validation
+    </button>`);
+  }
+  return buttons.join('');
+}
+
+function bindExInputs(){
+  document.querySelectorAll('[data-notes]').forEach(el => {
+    el.addEventListener('input', (e) => {
+      const id = e.target.dataset.notes;
+      state.exercises[id].notes = e.target.value;
+      save();
+    });
+  });
+}
+
+function toggleExOpen(exId){
+  const el = document.querySelector(`[data-ex="${exId}"]`);
+  if(el) el.classList.toggle('open');
+}
+window.toggleExOpen = toggleExOpen;
+
+function toggleCriterion(exId, critId){
+  event.stopPropagation();
+  if(!state.exercises[exId].criteria) state.exercises[exId].criteria = {};
+  state.exercises[exId].criteria[critId] = !state.exercises[exId].criteria[critId];
+  save();
+
+  // Mise à jour visuelle ciblée (pas de re-render complet)
+  const critEl = event.currentTarget;
+  if(critEl) critEl.classList.toggle('checked', state.exercises[exId].criteria[critId]);
+}
+window.toggleCriterion = toggleCriterion;
+
+function startEx(exId){
+  const s = state.exercises[exId];
+  s.startedAt = new Date().toISOString();
+  // Si c'est le premier exercice démarré globalement, on lance le chrono du parcours
+  if(!state.startedAt) state.startedAt = new Date().toISOString();
+  save();
+  render();
+  const el = document.querySelector(`[data-ex="${exId}"]`);
+  if(el) el.classList.add('open');
+  toast('Exercice démarré','success');
+}
+window.startEx = startEx;
+
+function markSent(exId){
+  state.exercises[exId].status = 'sent';
+  state.exercises[exId].sentAt = new Date().toISOString();
+  save();
+  render();
+  const el = document.querySelector(`[data-ex="${exId}"]`);
+  if(el) el.classList.add('open');
+  toast('Rendu marqué envoyé','success');
+}
+window.markSent = markSent;
+
+function markValidated(exId){
+  state.exercises[exId].status = 'validated';
+  state.exercises[exId].validatedAt = new Date().toISOString();
+  // Débloquer l'exercice suivant
+  const idx = EXERCICES.findIndex(e => e.id === exId);
+  if(idx < EXERCICES.length - 1){
+    const next = EXERCICES[idx + 1];
+    if(state.exercises[next.id].status === 'locked'){
+      state.exercises[next.id].status = 'active';
+    }
+  }
+  save();
+  render();
+  toast('Exercice validé · Suivant débloqué','success');
+}
+window.markValidated = markValidated;
+
+function revertToActive(exId){
+  state.exercises[exId].status = 'active';
+  state.exercises[exId].sentAt = null;
+  save();
+  render();
+  const el = document.querySelector(`[data-ex="${exId}"]`);
+  if(el) el.classList.add('open');
+  toast('Exercice remis en cours','success');
+}
+window.revertToActive = revertToActive;
+
+function revertToSent(exId){
+  state.exercises[exId].status = 'sent';
+  state.exercises[exId].validatedAt = null;
+  // Re-verrouiller l'exercice suivant si pas encore démarré
+  const idx = EXERCICES.findIndex(e => e.id === exId);
+  if(idx < EXERCICES.length - 1){
+    const next = EXERCICES[idx + 1];
+    const ns = state.exercises[next.id];
+    if(ns.status === 'active' && !ns.startedAt){
+      ns.status = 'locked';
+    }
+  }
+  save();
+  render();
+  toast('Validation annulée','success');
+}
+window.revertToSent = revertToSent;
+
+// ============ CHART ============
+function renderChart(){
+  const wrap = document.getElementById('progressChart');
+  const validated = EXERCICES.filter(ex => state.exercises[ex.id].validatedAt)
+    .map(ex => ({
+      num: ex.num,
+      week: (new Date(state.exercises[ex.id].validatedAt).getTime() - new Date(state.startedAt).getTime()) / (1000*60*60*24*7)
+    }))
+    .sort((a,b) => a.week - b.week);
+
+  if(validated.length === 0 || !state.startedAt){
+    wrap.innerHTML = `<div class="chart-empty">Valide au moins un exercice pour voir ta courbe de progression se dessiner.</div>`;
+    return;
+  }
+
+  const W = 680, H = 260;
+  const pL = 44, pR = 20, pT = 20, pB = 36;
+  const innerW = W - pL - pR;
+  const innerH = H - pT - pB;
+
+  // Axes : X = semaines (0 à max), Y = nombre d'exercices validés (0 à 6)
+  const maxWeeks = Math.max(weeksSinceStart(), TARGET_WEEKS, validated[validated.length-1].week + 1);
+  const scaleX = (w) => pL + (w / maxWeeks) * innerW;
+  const scaleY = (n) => pT + innerH - (n / TOTAL_EX) * innerH;
+
+  // Points réels
+  const points = [{x:scaleX(0), y:scaleY(0)}, ...validated.map((v,i) => ({x:scaleX(v.week), y:scaleY(i+1)}))];
+  // Ajouter point "maintenant"
+  const nowWeek = weeksSinceStart();
+  points.push({x:scaleX(nowWeek), y:scaleY(validated.length), current:true});
+
+  // Path courbe
+  let path = `M ${points[0].x} ${points[0].y}`;
+  for(let i=1; i<points.length; i++){
+    path += ` L ${points[i].x} ${points[i].y}`;
+  }
+  const fillPath = path + ` L ${points[points.length-1].x} ${pT+innerH} L ${points[0].x} ${pT+innerH} Z`;
+
+  // Ligne cible (1 exo / 2 semaines)
+  const targetEnd = Math.min(TOTAL_EX, maxWeeks / TARGET_WEEKS_PER_EX);
+  const targetEndWeek = targetEnd * TARGET_WEEKS_PER_EX;
+  const targetPath = `M ${scaleX(0)} ${scaleY(0)} L ${scaleX(targetEndWeek)} ${scaleY(targetEnd)}`;
+
+  // Grid X (semaines)
+  const xLines = [];
+  const xStep = Math.ceil(maxWeeks / 6);
+  for(let w = 0; w <= maxWeeks; w += xStep){
+    xLines.push(`<line x1="${scaleX(w)}" y1="${pT}" x2="${scaleX(w)}" y2="${pT+innerH}" stroke="rgba(255,255,255,.035)" stroke-width=".6"/>
+                 <text x="${scaleX(w)}" y="${H-12}" font-family="DM Mono" font-size="9" fill="#3e3c48" text-anchor="middle">S${Math.round(w)}</text>`);
+  }
+
+  // Grid Y
+  const yLines = [];
+  for(let n = 0; n <= TOTAL_EX; n++){
+    yLines.push(`<line x1="${pL}" y1="${scaleY(n)}" x2="${pL+innerW}" y2="${scaleY(n)}" stroke="rgba(255,255,255,.035)" stroke-width=".6"/>
+                 <text x="${pL-8}" y="${scaleY(n)+3}" font-family="DM Mono" font-size="9" fill="#3e3c48" text-anchor="end">${n}</text>`);
+  }
+
+  wrap.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+      <defs>
+        <linearGradient id="progFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#22c55e" stop-opacity=".28"/>
+          <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="progGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="progSoft"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      ${xLines.join('')}
+      ${yLines.join('')}
+
+      <!-- Ligne cible pointillée -->
+      <path d="${targetPath}" stroke="rgba(64,88,238,.35)" stroke-width="1.2" fill="none" stroke-dasharray="5,4"/>
+      <text x="${scaleX(targetEndWeek)-4}" y="${scaleY(targetEnd)-6}" font-family="DM Mono" font-size="9" fill="rgba(64,88,238,.55)" text-anchor="end" letter-spacing=".5">CIBLE 3 MOIS</text>
+
+      <!-- Fill réel -->
+      <path d="${fillPath}" fill="url(#progFill)"/>
+      <path d="${path}" stroke="rgba(34,197,94,.25)" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#progSoft)"/>
+      <path d="${path}" stroke="#22c55e" stroke-width="2.2" fill="none" stroke-linecap="round" filter="url(#progGlow)"/>
+
+      <!-- Points -->
+      ${points.map(p => {
+        if(p.current){
+          return `<circle cx="${p.x}" cy="${p.y}" r="6" fill="rgba(64,88,238,.15)"/>
+                  <circle cx="${p.x}" cy="${p.y}" r="4" fill="#4058ee" stroke="#0f0f18" stroke-width="1.5" filter="url(#progGlow)"/>`;
+        }
+        return `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="#22c55e" stroke="#0f0f18" stroke-width="1.5"/>`;
+      }).join('')}
+    </svg>
+  `;
+}
+
+// ============ INSIGHTS ============
+function renderInsights(){
+  const wrap = document.getElementById('insights');
+  const insights = [];
+  const validated = getValidatedCount();
+  const weeks = weeksSinceStart();
+
+  if(!state.startedAt){
+    insights.push({type:'neutral', icon:'→', text:`Démarre ton premier exercice pour voir des observations apparaître ici.`});
+  }else{
+    // Progression
+    if(validated === 0){
+      insights.push({type:'neutral', icon:'→', text:`Parcours démarré depuis <strong>${weeks.toFixed(1)} semaines</strong>. Aucun exercice validé encore — concentre-toi sur le premier.`});
+    }else{
+      insights.push({type:'good', icon:'✓', text:`<strong>${validated}/${TOTAL_EX} exercices validés</strong> en ${weeks.toFixed(1)} semaines.`});
+    }
+
+    // Rythme vs cible
+    if(validated > 0 && weeks > 0.5){
+      const expectedAtWeek = weeks / TARGET_WEEKS_PER_EX;
+      const diff = validated - expectedAtWeek;
+      if(diff >= 0.5){
+        insights.push({type:'good', icon:'↑', text:`Tu es <strong>en avance</strong> sur la cible de 3 mois. Qualité {'>'} vitesse — ne laisse pas ce rythme te faire sauter des étapes.`});
+      }else if(diff >= -0.5){
+        insights.push({type:'neutral', icon:'=', text:`Tu es <strong>au bon rythme</strong> pour viser les 3 mois (~${TARGET_WEEKS_PER_EX.toFixed(1)} sem/exercice).`});
+      }else{
+        insights.push({type:'neutral', icon:'≈', text:`Ton rythme est plus lent que la cible. <strong>Pas grave.</strong> L'accompagnement s'adapte à tes disponibilités.`});
+      }
+    }
+
+    // Temps moyen
+    if(validated >= 2){
+      const avgWeeksPerEx = weeks / validated;
+      insights.push({type:'neutral', icon:'⏱', text:`Temps moyen par exercice validé : <strong>${avgWeeksPerEx.toFixed(1)} semaines</strong>.`});
+    }
+
+    // Complétion
+    if(validated === TOTAL_EX){
+      insights.push({type:'good', icon:'🔥', text:`<strong>Phase Exercices terminée en ${weeks.toFixed(1)} semaines.</strong> Remplis ton debrief final pour passer en démo.`});
+    }
+  }
+
+  wrap.innerHTML = insights.map(ins =>
+    `<div class="insight ${ins.type}">
+      <span class="insight-icon">${ins.icon}</span>
+      <span class="insight-text">${ins.text}</span>
+    </div>`
+  ).join('');
+}
+
+// ============ DEBRIEF FINAL ============
+function renderFinalDebrief(){
+  const wrap = document.getElementById('finalDebriefContent');
+  const validated = getValidatedCount();
+  const unlocked = validated === TOTAL_EX;
+
+  if(!unlocked){
+    wrap.innerHTML = `
+      <div class="final-debrief fade-in" style="opacity:.6">
+        <div class="final-locked">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div>Débloqué après validation des ${TOTAL_EX} exercices</div>
+          <div style="margin-top:6px;color:var(--mid);letter-spacing:0;text-transform:none;font-size:12px">Actuellement : ${validated} / ${TOTAL_EX} validés</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div class="final-debrief fade-in">
+      <h3>Bilan de ta phase Exercices</h3>
+      <p class="final-debrief-intro">Phase Exercices terminée 🔥 Prends 15 minutes pour faire ce bilan honnête. Exporte ton JSON, envoie-le dans ton groupe privé, et prépare-toi à entrer en phase Démo.</p>
+
+      <div class="final-debrief-q">
+        <label>01 · Qu'est-ce que tu as appris de plus important dans cette phase ?</label>
+        <textarea id="fd1" placeholder="Une compétence concrète, un déclic, une prise de conscience..."></textarea>
+      </div>
+      <div class="final-debrief-q">
+        <label>02 · Quel exercice t'a le plus marqué et pourquoi ?</label>
+        <textarea id="fd2" placeholder="Celui qui a changé ta vision du trading..."></textarea>
+      </div>
+      <div class="final-debrief-q">
+        <label>03 · Comment abordes-tu la phase Démo ? Qu'est-ce qui t'inquiète, qu'est-ce qui t'excite ?</label>
+        <textarea id="fd3" placeholder="Tes peurs, tes attentes, tes objectifs pour la démo..."></textarea>
+      </div>
+    </div>
+  `;
+  bindFinalDebrief();
+}
+
+function bindFinalDebrief(){
+  ['d1','d2','d3'].forEach(id => {
+    const el = document.getElementById('fd'+id.substring(1));
+    if(!el) return;
+    el.value = state.finalDebrief[id] || '';
+    el.addEventListener('input', () => {
+      state.finalDebrief[id] = el.value;
+      save();
+    });
+  });
+}
+
+// ============ EXPORT / IMPORT ============
+function exportJSON(){
+  const data = {...state, exported_at: new Date().toISOString(), version: '1.0'};
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const validated = getValidatedCount();
+  a.download = `BBA_Exercices_${validated}sur${TOTAL_EX}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Export réussi','success');
+}
+window.exportJSON = exportJSON;
+
+function importJSON(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try{
+      const data = JSON.parse(evt.target.result);
+      if(!data.exercises) throw new Error('Format invalide');
+      state = {
+        startedAt: data.startedAt || null,
+        exercises: data.exercises || {},
+        finalDebrief: data.finalDebrief || {d1:'',d2:'',d3:''}
+      };
+      initExState();
+      save();
+      render();
+      toast('Import réussi','success');
+    }catch(err){ toast('Fichier invalide','error') }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+window.importJSON = importJSON;
+
+function resetAll(){
+  state = {
+    startedAt: null,
+    exercises: {},
+    finalDebrief: {d1:'',d2:'',d3:''}
+  };
+  initExState();
+  save();
+  render();
+  hideModal();
+  toast('Reset effectué','success');
+}
+
+// ============ MODAL ============
+function showModal(type){
+  const title = document.getElementById('modalTitle');
+  const text = document.getElementById('modalText');
+  const confirm = document.getElementById('modalConfirm');
+  if(type === 'reset'){
+    title.textContent = 'Reset total ?';
+    text.innerHTML = `Cette action efface <strong>tout</strong> : progression, notes, dates, debrief final. <br>Cette action est <strong style="color:var(--red)">irréversible</strong>. Pense à exporter ton JSON avant.`;
+    confirm.textContent = 'Tout effacer';
+    confirm.onclick = resetAll;
+  }
+  document.getElementById('modal').classList.add('open');
+}
+window.showModal = showModal;
+function hideModal(){document.getElementById('modal').classList.remove('open')}
+window.hideModal = hideModal;
+document.getElementById('modal').addEventListener('click',(e)=>{
+  if(e.target.id==='modal') hideModal();
+});
+
+// ============ TOAST ============
+let toastTimer;
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show '+type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{t.classList.remove('show')}, 2600);
+}
+
+// ============ FADE IN ============
+function observeFades(){
+  const fades = document.querySelectorAll('.fade-in:not(.visible)');
+  const fo = new IntersectionObserver(entries => {
+    entries.forEach((en, i) => {
+      if(en.isIntersecting){
+        setTimeout(() => en.target.classList.add('visible'), i * 55);
+        fo.unobserve(en.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -40px 0px' });
+  fades.forEach(f => fo.observe(f));
+}
+
+// Propagation data-parent vers les li pour affichage X.Y
+function propagateStepNumbers(){
+  document.querySelectorAll('.help-steps[data-parent]').forEach(ol => {
+    const parent = ol.getAttribute('data-parent');
+    ol.querySelectorAll(':scope > li').forEach(li => {
+      li.setAttribute('data-parent', parent);
+    });
+  });
+}
+
+// ============ FAQ ============
+function toggleFAQ(el){
+  const item = el.closest('.faq-item');
+  if(item) item.classList.toggle('open');
+}
+window.toggleFAQ = toggleFAQ;
+
+// ============ LANDING / NAVIGATION ============
+function enterApp(mode){
+  document.body.classList.remove('landing-mode');
+  document.body.classList.remove('help-mode','parcours-mode');
+  if(mode === 'aide'){
+    document.body.classList.add('help-mode');
+    try{ sessionStorage.setItem('bba_ex_last_view','help') }catch(e){}
+  }else{
+    document.body.classList.add('parcours-mode');
+    try{ sessionStorage.setItem('bba_ex_last_view','parcours') }catch(e){}
+  }
+  window.scrollTo({top:0, behavior:'instant'});
+  setTimeout(() => {
+    const targetId = mode === 'aide' ? 'aide' : 'parcours';
+    const target = document.getElementById(targetId);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 120);
+}
+window.enterApp = enterApp;
+
+function backToHome(){
+  document.body.classList.remove('help-mode','parcours-mode');
+  document.body.classList.add('landing-mode');
+  try{ sessionStorage.setItem('bba_ex_last_view','landing') }catch(e){}
+  window.scrollTo({top:0, behavior:'instant'});
+}
+window.backToHome = backToHome;
+
+// nav scroll active
+function bindNavScroll(){
+  const sections = ['aide','parcours','analyses','debrief-final'].map(id => document.getElementById(id)).filter(Boolean);
+  const links = document.querySelectorAll('.nav-tab');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if(en.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        const match = document.querySelector(`.nav-tab[href="#${en.target.id}"]`);
+        if(match) match.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-35% 0px -60% 0px' });
+  sections.forEach(s => obs.observe(s));
+}
+
+// ============ INIT ============
+(function init(){
+  load();
+  render();
+  bindNavScroll();
+  propagateStepNumbers();
+  try{
+    const lastView = sessionStorage.getItem('bba_ex_last_view');
+    if(lastView === 'help'){
+      document.body.classList.remove('landing-mode');
+      document.body.classList.add('help-mode');
+    }else if(lastView === 'parcours'){
+      document.body.classList.remove('landing-mode');
+      document.body.classList.add('parcours-mode');
+    }
+  }catch(e){}
+
+  // Update KPIs every minute (for time elapsed)
+  setInterval(() => {
+    if(state.startedAt && getValidatedCount() < TOTAL_EX){
+      renderKPIs();
+      renderMotiv();
+      renderTimeline();
+    }
+  }, 60000);
+})();
+</script>
+</body>
+</html>
